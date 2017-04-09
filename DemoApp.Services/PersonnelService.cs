@@ -24,6 +24,10 @@ namespace DemoApp.Services
             AutoMapperConfiguration.Configure();
         }
 
+        /// <summary>
+        /// Adds a person to the system.
+        /// </summary>
+        /// <param name="person">The person to add. Email address must be unique.</param>
         public void AddPerson(PersonDto person)
         {
             Person p = Mapper.Map<Person>(person);

@@ -12,6 +12,10 @@ using DemoApp.Services.DTO;
 
 namespace DemoApp.Test
 {
+    /// <summary>
+    /// Tests the concrete implementation PersonnelService using in-memory
+    /// storage and mocks.
+    /// </summary>
     [TestClass]
     public class PersonServiceTest
     {
@@ -50,8 +54,11 @@ namespace DemoApp.Test
 
             _mockUow = new Mock<IUnitOfWork>();
             _mockUow.Setup(x => x.PersonRepository).Returns(mockRepo.Object);
-            
-            //Using IoC/DI in unit tests is poor practice; the DI is not a service locator.
+
+            //Using IoC/DI in unit tests is poor practice; these are unit tests,
+            //they are not integration tests. For a suite of integration tests
+            //I would do away with Moq as much as possible and utilise a Portable
+            //SQL database or similar (see also: https://effort.codeplex.com/)
             _service = new PersonnelService(_mockUow.Object);
         }
 

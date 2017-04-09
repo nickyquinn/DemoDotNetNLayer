@@ -8,7 +8,7 @@ namespace DemoApp.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private IPersonnelService _service;
+        private readonly IPersonnelService _service;
 
         /// <summary>
         /// Controller constructor
@@ -43,7 +43,7 @@ namespace DemoApp.UI.Controllers
 
         public ActionResult Delete(int id)
         {
-            var person = _service.GetAll().Where(x => x.PersonDtoId == id).FirstOrDefault();
+            var person = _service.GetAll().FirstOrDefault(x => x.PersonDtoId == id);
             if (person != null)
             {
                 _service.RemovePerson(person);
