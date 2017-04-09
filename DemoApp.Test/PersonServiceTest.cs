@@ -17,36 +17,35 @@ namespace DemoApp.Test
     {
         private Mock<IUnitOfWork> _mockUow;
         private IPersonnelService _service;
-        List<Person> listPeople;
+        List<Person> _listPeople;
 
         [TestInitialize]
         public void Initialise()
         {
             //Set some default data
-            listPeople = new List<Person>();
-            listPeople.Add(new Person { Age = 51, EmailAddress = "jsmith@gmail.com", FirstName = "John", LastName = "Smith", PersonId = 1 });
-            listPeople.Add(new Person { Age = 45, EmailAddress = "rachaelgreen@aol.com", FirstName = "Rachael", LastName = "Green", PersonId = 2 });
-            listPeople.Add(new Person { Age = 24, EmailAddress = "anthonywest@gmail.com", FirstName = "Anthony", LastName = "West", PersonId = 3 });
+            _listPeople = new List<Person>();
+            _listPeople.Add(new Person { Age = 51, EmailAddress = "jsmith@gmail.com", FirstName = "John", LastName = "Smith", PersonId = 1 });
+            _listPeople.Add(new Person { Age = 45, EmailAddress = "rachaelgreen@aol.com", FirstName = "Rachael", LastName = "Green", PersonId = 2 });
+            _listPeople.Add(new Person { Age = 24, EmailAddress = "anthonywest@gmail.com", FirstName = "Anthony", LastName = "West", PersonId = 3 });
 
             //I'll mock a repository; note that as repository is just
             //a thin wrapper around EF's own repository, I'm not
             //going to test the repository as part of this demo, though
             //I could.
             var mockRepo = new Mock<IRepository<Person>>();
-            mockRepo.Setup(x => x.GetAll()).Returns(listPeople);
+            mockRepo.Setup(x => x.GetAll()).Returns(_listPeople);
             mockRepo.Setup(x => x.Add(It.IsAny<Person>())).Callback(
                 (Person entity) =>
                 {
-                    listPeople.Add(entity);
+                    _listPeople.Add(entity);
                 });
             mockRepo.Setup(x => x.FindById(It.IsAny<int>())).Returns(
-                (int i) => listPeople.Where(
-                    x => x.PersonId == i).Single()
+                (int i) => _listPeople.SingleOrDefault(x => x.PersonId == i)
                 );
             mockRepo.Setup(x => x.Remove(It.IsAny<Person>())).Callback(
                 (Person entity) =>
                 {
-                    listPeople.Remove(entity);
+                    _listPeople.Remove(entity);
                 });
 
             _mockUow = new Mock<IUnitOfWork>();
@@ -63,7 +62,7 @@ namespace DemoApp.Test
             //Act
             List<PersonDto> people = _service.GetAll() as List<PersonDto>;
             //Assert
-            Assert.IsTrue(people.Count == 3);
+            Assert.IsTrue(people != null && people.Count == 3);
         }
 
         [TestMethod]
@@ -127,6 +126,56 @@ namespace DemoApp.Test
 
             //Assert
             Assert.IsTrue(_service.GetAll().Count == 2);
+        }
+
+        [TestMethod]
+        public void People_Remove_NonExistant_Throws_Exception()
+        {
+            //Arrange
+            PersonDto personDto = new PersonDto()
+            {
+                Age = 66,
+                FirstName = "Jim",
+                LastName = "Davidson",
+                EmailAddress = "jimdavidson@aol.com",
+                PersonDtoId = 6
+            };
+
+            //Act and assert
+            try
+            {
+                _service.RemovePerson(personDto);
+                Assert.Fail("Exception not thrown");
+            }
+            catch (PersonNotExistsException)
+            {
+                _mockUow.VerifyAll();
+            }
+        }
+
+        [TestMethod]
+        public void People_Update_NonExistant_Throws_Exception()
+        {
+            //Arrange
+            PersonDto personDto = new PersonDto()
+            {
+                Age = 66,
+                FirstName = "Jim",
+                LastName = "Davidson",
+                EmailAddress = "jimdavidson@aol.com",
+                PersonDtoId = 6
+            };
+
+            //Act and assert
+            try
+            {
+                _service.UpdatePerson(personDto);
+                Assert.Fail("Exception not thrown");
+            }
+            catch (PersonNotExistsException)
+            {
+                _mockUow.VerifyAll();
+            }
         }
     }
 }

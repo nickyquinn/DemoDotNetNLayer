@@ -13,9 +13,14 @@ namespace DemoApp.Services
     {
         private readonly IUnitOfWork _uow;
 
+        /// <summary>
+        /// Constructor taking an IUnitOfWork
+        /// </summary>
+        /// <param name="uow"></param>
         public PersonnelService(IUnitOfWork uow)
         {
             _uow = uow;
+            //Configure the mapper for DTO and data objects.
             AutoMapperConfiguration.Configure();
         }
 

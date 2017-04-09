@@ -2,7 +2,7 @@
 
 namespace DemoApp.Services.CustomExceptions
 {
-    class PersonNotExistsException : Exception
+    public class PersonNotExistsException : Exception
     {
         public PersonNotExistsException()
         {

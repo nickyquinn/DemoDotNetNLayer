@@ -15,13 +15,7 @@ namespace DemoApp.Data.Repository
             _context = context;
         }
 
-        public DbContext Context
-        {
-            get
-            {
-                return _context; //Return the already-initialised context
-            }
-        }
+        public DbContext Context => _context;
 
         private Repository<Person> _personRepository;
 

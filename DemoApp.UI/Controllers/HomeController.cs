@@ -10,6 +10,10 @@ namespace DemoApp.UI.Controllers
     {
         private IPersonnelService _service;
 
+        /// <summary>
+        /// Controller constructor
+        /// </summary>
+        /// <param name="service">DI-injected service</param>
         public HomeController(IPersonnelService service)
         {
             _service = service;
