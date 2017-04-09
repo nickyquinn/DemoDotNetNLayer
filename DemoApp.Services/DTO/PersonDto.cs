@@ -22,5 +22,10 @@ namespace DemoApp.Services.DTO
         [Required]
         [Display(Name = "Age")]
         public int Age { get; set; }
+
+        public string GetFullName()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }

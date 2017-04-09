@@ -50,5 +50,27 @@ namespace DemoApp.UI.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var person = _service.GetAll().FirstOrDefault(x => x.PersonDtoId == id);
+            if (person != null)
+            {
+                return View(person);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Edit(PersonDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.UpdatePerson(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
     }
 }

@@ -81,8 +81,12 @@ namespace DemoApp.Services
             var p = _uow.PersonRepository.FindById(person.PersonDtoId);
             if (p != null)
             {
-                var personToUpdate = Mapper.Map<Person>(person);
-                _uow.PersonRepository.Update(personToUpdate);
+                //Will remaap the entity, passing in the 'p' Entity to map
+                //to the existing object instead of Automappers new object
+                //default.
+                p = Mapper.Map(person, p);
+
+                _uow.PersonRepository.Update(p);
                 _uow.SaveChanges();
             }
             else
